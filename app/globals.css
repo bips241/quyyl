@@ -60,11 +60,14 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+  .lite {
+    --background: 210 29% 97%;
+  }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply lite border-border;
   }
   body {
     @apply bg-background text-foreground;

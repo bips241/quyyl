@@ -1,13 +1,20 @@
+import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
 
 
-export default function RootLayout({ children }) {
+
+const inter = Inter({ subsets: ["latin"] });
+
+
+export default function RootLayout({
+  children,
+}) {
   return (
-    <html lang="en">
-      <body>
-        <Sidebar />
-        {children}
+    <html lang="en" className="" suppressHydrationWarning>
+      <body className={inter.className}>
+          {children}
+          <Toaster />
       </body>
     </html>
   );
