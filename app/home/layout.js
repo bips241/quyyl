@@ -13,7 +13,7 @@ export default function DashboardLayout({
         <Navbar />
         <Toaster/>
       </div>
-      <div className="flex-grow mt-12 md:mt-0 flex-1 w-full md:overflow-y-auto sm:p-6 md:p-12 max-w-7xl mx-auto">
+      <div className="flex-grow mt-[60px] ml-[13px] mr-[20px] flex-1 w-full md:overflow-y-auto p-1 mx-auto bg-white rounded-lg">
         {children}
       </div>
     </div>
