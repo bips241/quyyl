@@ -72,7 +72,7 @@ const Standard = [
 ]
 // Import the singleton Prisma client
 
-export async function getData() {
+async function getData() {
   try {
     // Fetch data from the database
     const studentData = await prisma.student.findMany({
