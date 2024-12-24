@@ -16,7 +16,7 @@ export const columns = [
     header: "Courses",
   },
   {
-    accessorKey: "Jdate",
+    accessorKey: "joinDate",
     header: "Date Joined",
   },
   {

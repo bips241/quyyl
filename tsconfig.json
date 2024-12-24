@@ -21,13 +21,20 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": ".", // Set the root of the project
+    "paths": {
+      "@/*": [
+        "./*"
+      ] // Map `@/` to the root directory
+    }
   },
   "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx"
+    "**/*.js",
+    "**/*.jsx",
+    ".next/types/**/*.js",
+    "next-env.d.js",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

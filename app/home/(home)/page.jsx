@@ -1,8 +1,13 @@
+'use server'
 import { ComboboxDemo } from "@/components/ComboBox"
 import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
+import { PrismaClient } from '@prisma/client'
+import Link from "next/link"
+
+const prisma = new PrismaClient();
 
 const Years = [
   ["AY 24-25"],[
@@ -68,45 +73,31 @@ const Standard = [
 
 async function getData() {
   // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      cohort: "Web Development",
-      status: "pending",
-      courses: "React, Node.js, Express",
-      Jdate: "2021-01-01",
-      lastActive: "2021-01-01",
+  const studentData = await prisma.student.findMany({
+    include: {
+      cohort: true, // Include cohort data
+      studentCourses: {
+        include: {
+          course: true, // Include course details
+        },
+      },
     },
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      cohort: "Web Development",
-      status: "pending",
-      courses: "React, Node.js, Express",
-      Jdate: "2021-01-01",
-      lastActive: "2021-01-01",
-    },
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      cohort: "Web Development",
-      status: "pending",
-      courses: "React, Node.js, Express",
-      Jdate: "2021-01-01",
-      lastActive: "2021-01-01",
-    },
-    {
-      id: "728ed52f",
-      name: "John Doe",
-      cohort: "Web Development",
-      status: "pending",
-      courses: "React, Node.js, Express",
-      Jdate: "2021-01-01",
-      lastActive: "2021-01-01",
-    },
-    // ...
-  ]
+  });
+
+  console.log(studentData);
+
+  if(!studentData) return [];
+
+  // Format data for easier use
+  return studentData.map(student => ({
+    id: student.id,
+    name: student.name,
+    status: student.status,
+    joinDate: student.joinDate,
+    lastActive: student.lastActive,
+    cohort: student.cohort.name,
+    courses: student.studentCourses.map(sc => sc.course.name).join(', '),
+  }));
 }
 
 export default async function DemoPage() {
@@ -120,10 +111,12 @@ export default async function DemoPage() {
           <ComboboxDemo datas={Standard}/>
         </div>
         <div>
-          <Button className="bg-[#e9edf1] hover:bg-[#cfdeec] text-black">
-            <Plus />
-            Add New Student
-          </Button>
+          <Link href={`/home/create`} passHref>
+            <Button className="bg-[#e9edf1] hover:bg-[#cfdeec] text-black">
+              <Plus />
+              Add New Student
+            </Button>
+          </Link>
         </div>
       </div>
       <DataTable columns={columns} data={data} />

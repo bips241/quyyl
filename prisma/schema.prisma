@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id           Int        @id @default(autoincrement()) // Unique ID
+  name         String     // Student Name
+  cohortId     Int        // Foreign key to Cohort
+  cohort       Cohort     @relation(fields: [cohortId], references: [id])
+  classStandard String     // Class Standard (e.g., "CBSE 9")
+  joinDate     DateTime   // Date Joined
+  lastActive   DateTime?  // Last login
+  status       String     // Status (e.g., Active, Inactive)
+  studentCourses StudentCourse[] // Relation to enrolled courses
+}
+
+model Cohort {
+  id       Int        @id @default(autoincrement()) // Unique ID
+  name     String     @unique // Cohort Name (e.g., "Cohort 2024")
+  students Student[]  // Relation to students
+}
+
+model Course {
+  id             Int            @id @default(autoincrement()) // Unique ID
+  name           String         @unique // Course Name (e.g., "Math")
+  studentCourses StudentCourse[] // Relation to enrolled students
+}
+
+model StudentCourse {
+  id         Int      @id @default(autoincrement()) // Unique ID
+  studentId  Int      // Foreign key to Student
+  student    Student  @relation(fields: [studentId], references: [id])
+  courseId   Int      // Foreign key to Course
+  course     Course   @relation(fields: [courseId], references: [id])
+}
+
