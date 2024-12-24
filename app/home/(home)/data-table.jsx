@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { EditForm } from "../../../components/edit-entry-form";
 import DeleteConfirmationDialog from "@/components/Delete";
+import { Delete } from "../actions";
 
 export function DataTable({ columns, data }) {
   const [editingRow, setEditingRow] = useState(null); // Track the row being edited
@@ -53,9 +54,9 @@ export function DataTable({ columns, data }) {
     setDeletingRow(null); // Clear the deleting row to exit delete mode
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Deleted row:", deletingRow);
-    // Add your deletion logic here (e.g., API call or state update)
+  const handleConfirmDelete = async() => {
+    Delete(deletingRow);
+    
     setDeletingRow(null); // Clear the deleting row after deletion
   };
 
