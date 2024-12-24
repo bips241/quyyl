@@ -33,6 +33,7 @@ export function DataTable({ columns, data }) {
       month: "short",
       year: "numeric",
     });
+  const handleDelete = (row) => {};
 
   const handleEdit = (row) => {
     setEditingRow(row.original); // Set the selected row data for editing
@@ -95,7 +96,7 @@ export function DataTable({ columns, data }) {
                       <Edit size={16} />
                     </button>
                     <button
-                      onClick={() => console.log("Delete row", row.original)}
+                      onClick={() => handleDelete(row)}
                       className="p-1 text-red-500 hover:text-red-700"
                     >
                       <Trash size={16} />

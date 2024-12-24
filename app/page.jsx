@@ -1,10 +1,5 @@
-import CreatePage from "./home/create/create-entry-form";
-import Create from "./home/create/page";
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <div>
-      Hi guys
-    </div>
-  );
+  redirect('/home');
 }

@@ -17,9 +17,10 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { updateData } from "@/app/home/create/actions";
 
 export function EditForm({ isOpen, onClose, rowData }) {
-  console.log("Row Data:", rowData);
+  console.log("Row:", rowData);
   const {
     register,
     handleSubmit,
@@ -31,7 +32,6 @@ export function EditForm({ isOpen, onClose, rowData }) {
       studentName: "",
       status: "",
       courses: [],
-      classStandard: "",
       joinDate: "",
       lastActive: "",
       cohort: "",
@@ -48,16 +48,17 @@ export function EditForm({ isOpen, onClose, rowData }) {
           setValue(key, value.split(", "));
         } else if (key === "name") {
           setValue("studentName", value);
-        } else {
+        }
+        else {
           setValue(key, value);
         }
       });
     }
   }, [rowData, setValue]);
 
-  const onSubmit = (data) => {
-    console.log("Updated Data:", data); // Log the updated data
-    onClose(); // Close the dialog
+  const onSubmit = async (data) => {
+    await updateData({ data, rowData });
+    onClose();
   };
 
   return (
@@ -129,33 +130,6 @@ export function EditForm({ isOpen, onClose, rowData }) {
                 )}
               </div>
               {errors.courses && <p className="text-red-500 text-sm">Select at least one course</p>}
-            </div>
-
-            {/* Class Standard */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Class Standard
-              </label>
-              <Select
-                onValueChange={(value) => setValue("classStandard", value)}
-                defaultValue={rowData?.classStandard }
-              >
-                <SelectTrigger className={`w-full ${errors.classStandard ? "border-red-500" : ""}`}>
-                  {watch("classStandard") || rowData?.classStandard || "Select Class Standard"}
-                </SelectTrigger>
-                <SelectContent>
-                  {["CBSE 10", "CBSE 09", "CBSE 08", "CBSE 07", "CBSE 06", "CBSE 05"].map(
-                    (standard) => (
-                      <SelectItem key={standard} value={standard}>
-                        {standard}
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
-              {errors.classStandard && (
-                <p className="text-red-500 text-sm">Class standard is required</p>
-              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
