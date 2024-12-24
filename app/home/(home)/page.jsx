@@ -70,34 +70,41 @@ const Standard = [
     }
   ]
 ]
+// Import the singleton Prisma client
 
-async function getData() {
-  // Fetch data from your API here.
-  const studentData = await prisma.student.findMany({
-    include: {
-      cohort: true, // Include cohort data
-      studentCourses: {
-        include: {
-          course: true, // Include course details
+export async function getData() {
+  try {
+    // Fetch data from the database
+    const studentData = await prisma.student.findMany({
+      include: {
+        cohort: true, // Include cohort data
+        studentCourses: {
+          include: {
+            course: true, // Include course details
+          },
         },
       },
-    },
-  });
+    });
 
-  console.log(studentData);
+    // Return an empty array if no data is found
+    if (!studentData) return [];
 
-  if(!studentData) return [];
-
-  // Format data for easier use
-  return studentData.map(student => ({
-    id: student.id,
-    name: student.name,
-    status: student.status,
-    joinDate: student.joinDate,
-    lastActive: student.lastActive,
-    cohort: student.cohort.name,
-    courses: student.studentCourses.map(sc => sc.course.name).join(', '),
-  }));
+    // Format data for easier use
+    return studentData.map((student) => ({
+      id: student.id,
+      name: student.name,
+      status: student.status,
+      joinDate: student.joinDate,
+      lastActive: student.lastActive,
+      cohort: student.cohort.name,
+      courses: student.studentCourses
+        .map((sc) => sc.course.name)
+        .join(", "),
+    }));
+  } catch (error) {
+    console.error("Error fetching student data:", error);
+    return [];
+  }
 }
 
 export default async function DemoPage() {
