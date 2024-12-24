@@ -16,8 +16,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EditForm } from "../../../components/edit-entry-form";
+import DeleteConfirmationDialog from "@/components/Delete";
+
 export function DataTable({ columns, data }) {
   const [editingRow, setEditingRow] = useState(null); // Track the row being edited
+  const [deletingRow, setDeletingRow] = useState(null); // Track the row being deleted
 
   const table = useReactTable({
     data,
@@ -33,14 +36,27 @@ export function DataTable({ columns, data }) {
       month: "short",
       year: "numeric",
     });
-  const handleDelete = (row) => {};
+
+  const handleDelete = (row) => {
+    setDeletingRow(row.original); // Set the selected row data for deletion
+  };
 
   const handleEdit = (row) => {
     setEditingRow(row.original); // Set the selected row data for editing
   };
 
-  const handleClose = () => {
+  const handleCloseEdit = () => {
     setEditingRow(null); // Clear the editing row to exit edit mode
+  };
+
+  const handleCloseDelete = () => {
+    setDeletingRow(null); // Clear the deleting row to exit delete mode
+  };
+
+  const handleConfirmDelete = () => {
+    console.log("Deleted row:", deletingRow);
+    // Add your deletion logic here (e.g., API call or state update)
+    setDeletingRow(null); // Clear the deleting row after deletion
   };
 
   return (
@@ -48,7 +64,7 @@ export function DataTable({ columns, data }) {
       {editingRow ? ( // Render the EditForm when a row is being edited
         <EditForm
           isOpen={!!editingRow}
-          onClose={handleClose}
+          onClose={handleCloseEdit}
           rowData={editingRow}
         />
       ) : (
@@ -72,11 +88,7 @@ export function DataTable({ columns, data }) {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="relative group hover:backdrop-blur-md"
-                >
+                <TableRow key={row.id} className="group hover:bg-gray-50">
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {cell.column.columnDef.id === "date"
@@ -88,7 +100,7 @@ export function DataTable({ columns, data }) {
                     </TableCell>
                   ))}
                   {/* Edit and Delete Buttons */}
-                  <TableCell className="absolute right-2 flex gap-2 opacity-0 group-hover:opacity-100 z-10">
+                  <TableCell className="flex gap-2">
                     <button
                       onClick={() => handleEdit(row)}
                       className="p-1 text-blue-500 hover:text-blue-700"
@@ -102,7 +114,6 @@ export function DataTable({ columns, data }) {
                       <Trash size={16} />
                     </button>
                   </TableCell>
-                  {/* Apply blur effect */}
                 </TableRow>
               ))
             ) : (
@@ -114,6 +125,15 @@ export function DataTable({ columns, data }) {
             )}
           </TableBody>
         </Table>
+      )}
+      {/* Render DeleteConfirmationDialog */}
+      {deletingRow && (
+        <DeleteConfirmationDialog
+          isOpen={!!deletingRow}
+          onClose={handleCloseDelete}
+          onConfirm={handleConfirmDelete}
+          customMessage={`Are you sure you want to delete the row with ID: ${deletingRow.id}?`}
+        />
       )}
     </div>
   );
